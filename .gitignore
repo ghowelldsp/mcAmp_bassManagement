@@ -1,0 +1,6 @@
+# workspace folder
+/.metadata/
+
+# build folders
+Debug/
+Release/
