@@ -23,6 +23,9 @@
 // Prototypes for this file
 #include "callback_audio_processing.h"
 
+#include "code_lib_c.h"
+
+
 /*
  *
  * Available Processing Power
@@ -221,6 +224,35 @@ void processaudio_setup(void) {
  * is 300,000 cycles or 300,000/32 or 9,375 per sample of audio
  */
 
+extern bassManagement_f32_handle_t bassManagementH;
+extern switch_f32_handle_t switchH;
+
+float32_t *pBassManSrc[2] = {audiochannel_spdif_0_left_in, audiochannel_spdif_0_right_in};
+float32_t *pBassManDstHigh[2] = {mcamp_ch1, mcamp_ch2};
+float32_t *pBassManDstBass = {audiochannel_spdif_0_left_out};
+
+float32_t *pSwitchSrc[4] = {audiochannel_spdif_0_left_in, audiochannel_spdif_0_right_in,
+							mcamp_ch1, mcamp_ch2};
+
+// check to see if params have been updated
+void updatesParams(void)
+{
+	uint8_t switchPosition =  (uint8_t)multicore_data->switchPosition;
+
+	if (switch_f32_setPosition(&switchH, switchPosition) != ERR_STATUS_OK)
+	{
+		log_event(EVENT_INFO, "Switch: failed to set switch position");
+	}
+	else
+	{
+		char msg[128];
+		sprintf(msg, "Switch: position set to %d", switchPosition);
+		log_event(EVENT_INFO, msg);
+	}
+
+	multicore_data->paramUpdateFlag = 0U;
+}
+
 // When debugging audio algorithms, helpful to comment out this pragma for more linear single stepping.
 #pragma optimize_for_speed
 void processaudio_callback(void) {
@@ -244,7 +276,22 @@ void processaudio_callback(void) {
 
 	}
 
+	if (multicore_data->paramUpdateFlag) { updatesParams(); }
+
+	bassManagement_f32_process(&bassManagementH, pBassManSrc, pBassManDstHigh, pBassManDstBass, AUDIO_BLOCK_SIZE);
+
+	// sum bass into high outputs
+	for (int i = 0; i < AUDIO_BLOCK_SIZE; i++)
+	{
+		mcamp_ch1[i] += pBassManDstBass[i];
+		mcamp_ch2[i] += pBassManDstBass[i];
+	}
+
+	switch_f32_process(&switchH, pSwitchSrc, pBassManDstHigh, AUDIO_BLOCK_SIZE);
+
+
 	// Otherwise, perform our C-based block processing here!
+#if 0U
 	for (int i = 0; i < AUDIO_BLOCK_SIZE; i++) {
 
 		// *******************************************************************************
@@ -343,7 +390,7 @@ void processaudio_callback(void) {
 
 #endif
 	}
-
+#endif
 }
 
 #if (USE_BOTH_CORES_TO_PROCESS_AUDIO)

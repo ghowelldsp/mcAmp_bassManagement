@@ -28,6 +28,9 @@
 // And our call backs from processing UART / MIDI messages
 #include "callback_midi_message.h"
 
+#include "paramReader.h"
+
+
 /**
  * @brief If any FATAL or ERROR events are reported, this function gets called as an interrupt
  */
@@ -118,6 +121,9 @@ int main(int argc, const char *argv[]) {
 
     // Initialize our selected the audio framework
     audioframework_initialize();
+    
+    // initialise parameter reader
+	paramReaderInit();
 
     // Initialize the effects presets
     multicore_data->total_effects_presets = 10;

@@ -36,6 +36,8 @@
 #include "callback_midi_message.h"
 
 #include "drivers/mcAmp_drivers/mcAmp.h"
+#include "switch.h"
+#include "bassManagement.h"
 
 /**
  * If you want to use command program arguments, then place them in the following string.
@@ -133,6 +135,10 @@ int main(void){
     while (!multicore_data->sharc_core1_processing_audio)
         continue;
     log_event(EVENT_INFO, "Audio DMA is running!");
+    
+    // initialise switch
+	switchInit();
+	bassManagementInit();
 
     // enable mulichannel amps
     mcAmp_enable();

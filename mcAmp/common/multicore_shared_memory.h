@@ -11,6 +11,8 @@
 #include "audio_system_config.h"
 #include "drivers/bm_event_logging_driver/bm_event_logging.h"
 
+#include "code_lib_c.h"
+
 /*
  * This structure lives in L2 memory where the MCAPI memory normally live
  * It's important to ensure that MCAPI is not enabled if you are using this
@@ -125,6 +127,12 @@ typedef struct
     char sharc_core2_event_message[EVENT_LOG_MESSAGE_LEN];
 
     // Add any parameters that you'd like all three cores to access here
+	uint32_t paramUpdateFlag;
+
+	// switch
+	uint8_t switchPosition;
+	bassManagement_f32_params_t bassManagementParams;
+
 
     /*
      * If we're using Faust on both cores, use a simple FIFO to move MIDI notes
