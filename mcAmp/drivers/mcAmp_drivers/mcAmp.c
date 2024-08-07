@@ -57,10 +57,10 @@ typedef struct mcAmp_amps_t
 BM_TWI mcAmpTwiH;
 
 mcAmp_params_t mcAmpConfig = {
-    .volumeDb = -12.0F,
+    .volumeDb = 3.0F,
     .limiterAttackTime = MA12040P_AR_TIME_FAST,
     .limiterReleaseTime = MA12040P_AR_TIME_NORMAL,
-    .limiterThresholdDb = -12.0F
+    .limiterThresholdDb = 0.0F
 };
 
 mcAmp_amps_t amps = {0};

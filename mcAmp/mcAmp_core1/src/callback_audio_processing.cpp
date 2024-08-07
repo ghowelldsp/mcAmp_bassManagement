@@ -228,11 +228,11 @@ extern bassManagement_f32_handle_t bassManagementH;
 extern switch_f32_handle_t switchH;
 
 float32_t *pBassManSrc[2] = {audiochannel_spdif_0_left_in, audiochannel_spdif_0_right_in};
-float32_t *pBassManDstHigh[2] = {mcamp_ch1, mcamp_ch2};
+float32_t *pBassManDstHigh[2] = {mcamp_ch1, mcamp_ch10};
 float32_t *pBassManDstBass = {audiochannel_spdif_0_left_out};
 
 float32_t *pSwitchSrc[4] = {audiochannel_spdif_0_left_in, audiochannel_spdif_0_right_in,
-							mcamp_ch1, mcamp_ch2};
+							mcamp_ch1, mcamp_ch10};
 
 // check to see if params have been updated
 void updatesParams(void)
@@ -283,8 +283,8 @@ void processaudio_callback(void) {
 	// sum bass into high outputs
 	for (int i = 0; i < AUDIO_BLOCK_SIZE; i++)
 	{
-		mcamp_ch1[i] += pBassManDstBass[i];
-		mcamp_ch2[i] += pBassManDstBass[i];
+		pBassManDstHigh[0][i] += pBassManDstBass[i];
+		pBassManDstHigh[1][i] += pBassManDstBass[i];
 	}
 
 	switch_f32_process(&switchH, pSwitchSrc, pBassManDstHigh, AUDIO_BLOCK_SIZE);

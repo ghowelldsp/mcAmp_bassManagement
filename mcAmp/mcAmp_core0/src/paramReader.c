@@ -66,9 +66,9 @@ error_status_t setParams(void)
     		multicore_data->switchPosition = pParamState[i].value;
     		log_event(EVENT_INFO, "Switch: position parameter update");
     	}
-    	else if (strcmp(pName, "RmsAttCoeff") == 0)
+    	else if (strcmp(pName, "RmsAttackTime") == 0)
     	{
-    		multicore_data->bassManagementParams.bassExt.rmsAttackCoeff = pParamState[i].value;
+    		multicore_data->bassManagementParams.bassExt.rmsAttackTime = pParamState[i].value;
     		log_event(EVENT_INFO, "Bass Extension: rms attack coefficient parameter update");
     	}
     	else

@@ -10,9 +10,9 @@
 
 #include "drivers/bm_event_logging_driver/bm_event_logging.h"
 
-#include "tymphany_ta6fd00_sealed_box_bassExtParams.h"
+#include "tymphany_ta6fd00_sealed_box_driverData_bassExtParams.h"
 
-#define STATE_MEMORY_SIZE           (192U)
+#define STATE_MEMORY_SIZE           (416U)
 
 #define N_CHANNELS					(2U)
 
@@ -24,12 +24,14 @@ char bassManagementStateMem[STATE_MEMORY_SIZE] = {0};
 
 void bassManagementInit(void)
 {
-	bassManagement_f32_stateParams_t stateParams = {N_CHANNELS, N_STAGES_XO_LOW, N_STAGES_XO_HIGH};
+	bassManagement_f32_stateParams_t stateParams = {N_CHANNELS, N_STAGES_XO_LOW, N_STAGES_XO_HIGH, N_STAGES_DISP,
+												    N_STAGES_DC};
 	bassManagement_f32_params_t params = {{sosXoLow[0]},
-										  {sosXoHigh[0]},
-										  {RMS_ATTACK_COEFF, RMS_GAIN, RMS_GRAD, RMS_Y_INT, SMOOTH_ATTACK_COEFF,
-										   SMOOTH_RELEASE_COEFF, EXT_POLE_LOW_REAL, EXT_POLE_LOW_IMAG, EXT_POLE_HIGH_REAL,
-										   EXT_POLE_HIGH_IMAG, K_LOW, K_LOW_INV, FS, sosExtHigh[0], sosInd[0]}};
+	                                      {sosXoHigh[0]},
+	                                      {RMS_GAIN, RMS_GRAD, RMS_Y_INT, RMS_ATTACK_TIME, SMOOTH_ATTACK_TIME,
+	                                       SMOOTH_RELEASE_TIME, EXT_POLE_LOW_REAL, EXT_POLE_LOW_IMAG, EXT_POLE_HIGH_REAL,
+	                                       EXT_POLE_HIGH_IMAG, DISPLACEMENT_GAIN, K_LOW, K_LOW_INV, FS, sosExtHigh[0],
+	                                       sosInd[0], sosDisp[0], sosDc[0]}};
 
 	size_t pStateMemReq;
 
